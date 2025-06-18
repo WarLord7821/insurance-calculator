@@ -117,8 +117,8 @@ function calculateGrossPremium(netPremiums, discount) {
 
   const paymentTypes = [
     { label: "1 Year", multiplier: 1, extraDiscount: 0 },
-    { label: "2 Year", multiplier: 2, extraDiscount: 7.5 },
-    { label: "3 Year", multiplier: 3, extraDiscount: 12 },
+    { label: "2 Year", multiplier: 2, extraDiscount: 20.95 },
+    { label: "3 Year", multiplier: 3, extraDiscount: 25.20 },
   ];
 
   for (const type of paymentTypes) {
