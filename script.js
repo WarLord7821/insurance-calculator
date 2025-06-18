@@ -112,7 +112,6 @@ function calculateExtraChildPremium(data, extraChildren) {
 
   return premiums;
 }
-
 function calculateGrossPremium(netPremiums, discount) {
   const rows = [];
   const sumAssuredOptions = [5, 10, 15, 20, 25]; // in lakhs
@@ -130,16 +129,19 @@ function calculateGrossPremium(netPremiums, discount) {
       const key = `${sumAssured}L`;
       let FN = netPremiums[key];
 
-      // Add loading only if sum assured > 5L
+      // Step 1: Add loading if SA > 5L
       let FFN = FN + (sumAssured > 5 ? 0.12 * FN : 0);
 
-      // Multiply by yearly multiplier
-      let FFFN = FFN * type.multiplier;
+      // Step 2: Apply female proposer/child discount (5% + 5%)
+      let discountedFFN = FFN - (FFN * (discount / 100));
 
-      // Apply yearly discount
+      // Step 3: Multiply for 2/3 year premium
+      let FFFN = discountedFFN * type.multiplier;
+
+      // Step 4: Apply multi-year discount
       let FFFFN = FFFN - (FFFN * (type.extraDiscount / 100));
 
-      // Add 18% GST
+      // Step 5: Add 18% GST
       let finalPremium = FFFFN + (FFFFN * 0.18);
 
       row.push(`₹ ${Math.round(finalPremium)}`);
@@ -150,6 +152,7 @@ function calculateGrossPremium(netPremiums, discount) {
 
   return rows;
 }
+
 
 function renderResultTable(tableData) {
   const tbody = document.getElementById("premiumRows");
