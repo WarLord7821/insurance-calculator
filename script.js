@@ -116,9 +116,9 @@ function calculateGrossPremium(netPremiums, discount) {
   const sumAssuredOptions = [5, 10, 15, 20, 25]; // in lakhs
 
   const paymentTypes = [
-    { label: "Pay 1 Yearly", multiplier: 1, extraDiscount: 0 },
-    { label: "Pay 2 Yearly", multiplier: 2, extraDiscount: 7.5 },
-    { label: "Pay 3 Yearly", multiplier: 3, extraDiscount: 12 },
+    { label: "1 Year", multiplier: 1, extraDiscount: 0 },
+    { label: "2 Year", multiplier: 2, extraDiscount: 7.5 },
+    { label: "3 Year", multiplier: 3, extraDiscount: 12 },
   ];
 
   for (const type of paymentTypes) {
