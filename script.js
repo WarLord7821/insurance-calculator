@@ -97,8 +97,14 @@ function findNetPremium(data, age) {
   const row = data.find(row => row["Age Group"] === ageGroup);
   if (!row) throw new Error(`No premium found for age group: ${ageGroup}`);
 
-  return parseFloat(row["5L"]); // Base net premium at 5L
+  // Return the whole row so we can use all SA levels (5L, 10L, etc.)
+  const premiums = {};
+  for (const key of ["5L", "10L", "15L", "20L", "25L"]) {
+    premiums[key] = parseFloat(row[key]);
+  }
+  return premiums;
 }
+
 
 function calculateExtraChildPremium(data, extraChildren) {
   const row = data[0]; // Only one row, no age group now
@@ -112,6 +118,7 @@ function calculateExtraChildPremium(data, extraChildren) {
 
   return premiums;
 }
+
 function calculateGrossPremium(netPremiums, discount) {
   const rows = [];
   const sumAssuredOptions = [5, 10, 15, 20, 25]; // in lakhs
@@ -127,24 +134,24 @@ function calculateGrossPremium(netPremiums, discount) {
 
     for (const sumAssured of sumAssuredOptions) {
       const key = `${sumAssured}L`;
-      let FN = netPremiums[key];
+      let FN = netPremiums[key]; // Net premium for this SA
 
       // Step 1: Add loading if SA > 5L
       let FFN = FN + (sumAssured > 5 ? 0.12 * FN : 0);
 
       // Step 2: Apply female proposer/child discount (5% + 5%)
-      let discountedFFN = FFN - (FFN * (discount / 100));
+      let afterGenderDiscount = FFN - (FFN * discount / 100);
 
-      // Step 3: Multiply for 2/3 year premium
-      let FFFN = discountedFFN * type.multiplier;
+      // Step 3: Multiply for 2/3 year pay
+      let multipliedPremium = afterGenderDiscount * type.multiplier;
 
       // Step 4: Apply multi-year discount
-      let FFFFN = FFFN - (FFFN * (type.extraDiscount / 100));
+      let discountedPremium = multipliedPremium - (multipliedPremium * type.extraDiscount / 100);
 
       // Step 5: Add 18% GST
-      let finalPremium = FFFFN + (FFFFN * 0.18);
+      let finalGross = discountedPremium + (discountedPremium * 0.18);
 
-      row.push(`₹ ${Math.round(finalPremium)}`);
+      row.push(`₹ ${Math.round(finalGross)}`);
     }
 
     rows.push(row);
@@ -152,6 +159,7 @@ function calculateGrossPremium(netPremiums, discount) {
 
   return rows;
 }
+
 
 
 function renderResultTable(tableData) {
