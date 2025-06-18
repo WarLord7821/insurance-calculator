@@ -19,16 +19,9 @@ document.getElementById("premiumForm").addEventListener("submit", async function
 
   try {
     const baseData = await fetchJSON(`json_outputs/${sheetName}.json`);
-    const baseNetPremium = findNetPremium(baseData, age);
+    const baseNetPremiums = findNetPremium(baseData, age); // contains all SAs
 
-    // Initialize totalPremium as an object for each sum assured level
-    let totalPremium = {
-      "5L": baseNetPremium,
-      "10L": baseNetPremium,
-      "15L": baseNetPremium,
-      "20L": baseNetPremium,
-      "25L": baseNetPremium
-    };
+    let totalPremium = { ...baseNetPremiums };
 
     if (children > 2) {
       const extraChildData = await fetchJSON("json_outputs/ExtraChild.json");
@@ -97,7 +90,7 @@ function findNetPremium(data, age) {
   const row = data.find(row => row["Age Group"] === ageGroup);
   if (!row) throw new Error(`No premium found for age group: ${ageGroup}`);
 
-  // Return the whole row so we can use all SA levels (5L, 10L, etc.)
+  // Return full premiums for all SA levels
   const premiums = {};
   for (const key of ["5L", "10L", "15L", "20L", "25L"]) {
     premiums[key] = parseFloat(row[key]);
@@ -105,9 +98,8 @@ function findNetPremium(data, age) {
   return premiums;
 }
 
-
 function calculateExtraChildPremium(data, extraChildren) {
-  const row = data[0]; // Only one row, no age group now
+  const row = data[0];
   if (!row) throw new Error("Invalid extra child premium data format.");
 
   const premiums = {};
@@ -134,7 +126,7 @@ function calculateGrossPremium(netPremiums, discount) {
 
     for (const sumAssured of sumAssuredOptions) {
       const key = `${sumAssured}L`;
-      let FN = netPremiums[key]; // Net premium for this SA
+      let FN = netPremiums[key];
 
       // Step 1: Add loading if SA > 5L
       let FFN = FN + (sumAssured > 5 ? 0.12 * FN : 0);
@@ -142,7 +134,7 @@ function calculateGrossPremium(netPremiums, discount) {
       // Step 2: Apply female proposer/child discount (5% + 5%)
       let afterGenderDiscount = FFN - (FFN * discount / 100);
 
-      // Step 3: Multiply for 2/3 year pay
+      // Step 3: Multiply for 2/3 year premium
       let multipliedPremium = afterGenderDiscount * type.multiplier;
 
       // Step 4: Apply multi-year discount
@@ -160,8 +152,6 @@ function calculateGrossPremium(netPremiums, discount) {
   return rows;
 }
 
-
-
 function renderResultTable(tableData) {
   const tbody = document.getElementById("premiumRows");
   tbody.innerHTML = "";
@@ -177,3 +167,5 @@ function renderResultTable(tableData) {
   });
   document.getElementById("resultTable").classList.remove("hidden");
 }
+
+     
