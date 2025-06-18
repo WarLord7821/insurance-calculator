@@ -118,9 +118,9 @@ function calculateGrossPremium(netPremiums, discount) {
   const sumAssuredOptions = [5, 10, 15, 20, 25]; // in lakhs
 
   const paymentTypes = [
-    { label: "Pay 1 Yearly", extraDiscount: 0 },
-    { label: "Pay 2 Yearly", extraDiscount: 7.5 },
-    { label: "Pay 3 Yearly", extraDiscount: 12 },
+    { label: "Pay 1 Yearly", multiplier: 1, extraDiscount: 0 },
+    { label: "Pay 2 Yearly", multiplier: 2, extraDiscount: 7.5 },
+    { label: "Pay 3 Yearly", multiplier: 3, extraDiscount: 12 },
   ];
 
   for (const type of paymentTypes) {
@@ -128,19 +128,21 @@ function calculateGrossPremium(netPremiums, discount) {
 
     for (const sumAssured of sumAssuredOptions) {
       const key = `${sumAssured}L`;
-      let value = netPremiums[key];
+      let FN = netPremiums[key];
 
-      let loading = sumAssured > 5 ? 0.12 * value : 0;
-      value += loading;
+      // Add loading only if sum assured > 5L
+      let FFN = FN + (sumAssured > 5 ? 0.12 * FN : 0);
 
-      if (discount > 0) {
-        value -= value * (discount / 100);
-      }
+      // Multiply by yearly multiplier
+      let FFFN = FFN * type.multiplier;
 
-      value += value * 0.18; // GST
-      value -= value * (type.extraDiscount / 100); // Extra discount
+      // Apply yearly discount
+      let FFFFN = FFFN - (FFFN * (type.extraDiscount / 100));
 
-      row.push(`₹ ${Math.round(value)}`);
+      // Add 18% GST
+      let finalPremium = FFFFN + (FFFFN * 0.18);
+
+      row.push(`₹ ${Math.round(finalPremium)}`);
     }
 
     rows.push(row);
