@@ -8,57 +8,64 @@
   <script defer src="script.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-6">
-    <h1 class="text-2xl font-bold mb-6 text-center">Gross Premium Calculator</h1>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-3xl bg-white shadow-xl rounded-lg p-6 md:p-10">
+    <h1 class="text-3xl font-bold mb-8 text-center text-blue-700">Gross Premium Calculator</h1>
 
     <!-- Input Form -->
-    <form id="premiumForm" class="space-y-4">
-      <div class="flex gap-4">
-        <div class="flex-1">
-          <label class="block font-medium">Number of Adults</label>
-          <input type="number" id="adults" min="1" value="2" class="w-full border rounded px-3 py-2" required>
+    <form id="premiumForm" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block font-medium text-gray-700">Number of Adults</label>
+          <input type="number" id="adults" min="1" value="2" class="mt-1 w-full border rounded px-3 py-2" required>
         </div>
-        <div class="flex-1">
-          <label class="block font-medium">Number of Children</label>
-          <input type="number" id="children" min="0" value="2" class="w-full border rounded px-3 py-2" required>
+        <div>
+          <label class="block font-medium text-gray-700">Number of Children</label>
+          <input type="number" id="children" min="0" value="2" class="mt-1 w-full border rounded px-3 py-2" required>
         </div>
       </div>
 
       <div>
-        <label class="block font-medium">Birthdate of Eldest Family Member</label>
-        <input type="date" id="birthdate" class="w-full border rounded px-3 py-2" required>
+        <label class="block font-medium text-gray-700">Birthdate of Eldest Family Member</label>
+        <input type="date" id="birthdate" class="mt-1 w-full border rounded px-3 py-2" required>
       </div>
 
-
-      <div class="flex gap-4">
-        <label><input type="checkbox" id="femaleProposer" class="mr-1"> Female Proposer</label>
-        <label><input type="checkbox" id="femaleChild" class="mr-1"> Female Child</label>
+      <div class="flex flex-wrap gap-4 items-center">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="femaleProposer" class="mr-2"> Female Proposer
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="femaleChild" class="mr-2"> Female Child
+        </label>
       </div>
 
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Calculate Premium
-      </button>
+      <div class="text-center">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all">
+          Calculate Premium
+        </button>
+      </div>
     </form>
 
     <!-- Output Table -->
-    <div id="resultTable" class="mt-8 hidden">
-      <h2 class="text-xl font-semibold mb-4 text-center">Gross Premium Table</h2>
-      <table class="w-full text-center border border-collapse">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border px-2 py-1">Payment Type</th>
-            <th class="border px-2 py-1">5 Lakh</th>
-            <th class="border px-2 py-1">10 Lakh</th>
-            <th class="border px-2 py-1">15 Lakh</th>
-            <th class="border px-2 py-1">20 Lakh</th>
-            <th class="border px-2 py-1">25 Lakh</th>
-          </tr>
-        </thead>
-        <tbody id="premiumRows">
-          <!-- Dynamic Rows -->
-        </tbody>
-      </table>
+    <div id="resultTable" class="mt-10 hidden">
+      <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Gross Premium Table</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-center border border-collapse text-sm md:text-base">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border px-2 py-2">Payment Type</th>
+              <th class="border px-2 py-2">5 Lakh</th>
+              <th class="border px-2 py-2">10 Lakh</th>
+              <th class="border px-2 py-2">15 Lakh</th>
+              <th class="border px-2 py-2">20 Lakh</th>
+              <th class="border px-2 py-2">25 Lakh</th>
+            </tr>
+          </thead>
+          <tbody id="premiumRows">
+            <!-- Dynamic Rows -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </body>
