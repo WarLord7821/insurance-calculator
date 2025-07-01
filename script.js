@@ -167,5 +167,4 @@ function renderResultTable(tableData) {
   });
   document.getElementById("resultTable").classList.remove("hidden");
 }
-
      
